@@ -1,0 +1,33 @@
+# ==============================================================================
+# Grehasoft PMS & CRM - Base Dependencies (Application Core)
+# ==============================================================================
+
+# Django Core
+Django>=4.2,<5.1
+
+# Database - MySQL Connector
+mysqlclient>=2.2.0
+
+# API Framework
+djangorestframework>=3.14.0
+django-filter>=23.2          # For advanced queryset filtering (PMS/CRM)
+django-cors-headers>=4.3.1   # Cross-Origin Resource Sharing for React
+
+# Authentication - JWT
+djangorestframework-simplejwt>=5.3.1
+
+# Environment Variable Management
+django-environ>=0.11.2
+
+# JSON Web Token Decoding (Utility)
+PyJWT>=2.8.0
+
+# Date/Time & Utilities
+python-dateutil>=2.8.2
+pytz>=2023.3
+
+# Image Processing (Required if adding profile pictures/logos)
+Pillow>=10.1.0
+
+# Logic & Data Consistency
+django-cleanup>=8.0.0       # Automatically deletes files from storage when models are deleted

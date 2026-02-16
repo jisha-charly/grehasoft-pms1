@@ -1,0 +1,27 @@
+# ==============================================================================
+# Grehasoft PMS & CRM - Development Dependencies
+# ==============================================================================
+
+# Include base dependencies
+-r base.txt
+
+# Debugging & Inspection
+django-debug-toolbar>=4.2.0     # SQL inspection and profiling in browser
+django-extensions>=3.2.3        # Adds shell_plus and useful management commands
+
+# API Documentation (Swagger/OpenAPI)
+# Critical for frontend developers to understand PMS/CRM endpoints
+drf-spectacular>=0.26.5
+
+# Enhanced Shell
+ipython>=8.17.2                 # Better interactive shell for testing models
+
+# Testing Framework
+pytest-django>=4.5.2            # Core testing for Django
+pytest-cov>=4.1.0               # Test coverage reporting
+model-bakery>=1.17.0            # Mock data generation for CRM/PMS testing
+
+# Code Quality & Formatting
+flake8>=6.1.0                   # Linting
+black>=23.11.0                  # Opinionated code formatting
+isort>=5.12.0                   # Sort imports automatically
