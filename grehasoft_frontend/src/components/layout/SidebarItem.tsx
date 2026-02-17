@@ -1,28 +1,30 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { UserRole } from '../../types/auth';
 
 interface Props {
   to: string;
   label: string;
   icon: string;
+  allowedRoles?: UserRole[];
 }
 
-const SidebarItem: React.FC<Props> = ({ to, label, icon }) => {
+export const SidebarItem: React.FC<Props> = ({ to, label, icon, allowedRoles }) => {
+  const { user } = useAuth();
+
+  // RBAC: If allowedRoles is defined, check if user has permission
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    return null;
+  }
+
   return (
-    <li className="nav-item mb-2">
-      <NavLink
-        to={to}
-        className={({ isActive }) =>
-          `nav-link text-white d-flex align-items-center ${
-            isActive ? "bg-primary rounded" : ""
-          }`
-        }
-      >
-        <i className={`bi ${icon} me-2`}></i>
-        {label}
-      </NavLink>
-    </li>
+    <NavLink 
+      to={to} 
+      className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+    >
+      <i className={`bi ${icon}`}></i>
+      <span>{label}</span>
+    </NavLink>
   );
 };
-
-export default SidebarItem;

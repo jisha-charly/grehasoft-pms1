@@ -1,72 +1,56 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { pmsService } from '../../../api/pms.service';
 import { Project } from '../../../types/pms';
-import Spinner from '../../../components/common/Spinner';
-import EmptyState from '../../../components/common/EmptyState';
-import { PATHS } from '../../../routes/paths';
+import { DataTable } from '../../../components/common/DataTable';
+import { ProjectProgress } from '../../../components/pms/project/ProjectProgress';
+import { dateHelper } from '../../../utils/dateHelper';
+import { Button } from '../../../components/common/Button';
 
-const ProjectList = () => {
-  const navigate = useNavigate();
+const ProjectList: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchProjects = async () => {
-    try {
-      const response = await pmsService.getProjects();
-      setProjects(response.data.results);
-    } catch (error) {
-      console.error('Failed to fetch projects:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchProjects();
+    pmsService.getProjects().then((res) => {
+      setProjects(res.data.results);
+      setLoading(false);
+    });
   }, []);
 
-  if (loading) return <Spinner />;
-
-  if (!projects.length)
-    return (
-      <div className="container py-5">
-        <EmptyState title="No projects available." />
-      </div>
-    );
+  const columns = [
+    { 
+      header: 'Project Name', 
+      render: (p: Project) => (
+        <div>
+          <Link to={`/pms/projects/${p.id}/kanban`} className="fw-bold text-decoration-none">{p.name}</Link>
+          <div className="text-muted xsmall">{p.client_name}</div>
+        </div>
+      ) 
+    },
+    { header: 'Manager', render: (p: Project) => <span className="small">{p.manager_name}</span> },
+    { 
+      header: 'Progress', 
+      render: (p: Project) => <ProjectProgress percentage={p.progress_percentage} /> 
+    },
+    { 
+      header: 'Status', 
+      render: (p: Project) => (
+        <span className={`badge border text-capitalize ${p.status === 'completed' ? 'bg-success-subtle text-success' : 'bg-light text-dark'}`}>
+          {p.status.replace('_', ' ')}
+        </span>
+      ) 
+    },
+    { header: 'Deadline', render: (p: Project) => dateHelper.formatDisplay(p.end_date) },
+  ];
 
   return (
-    <div className="container-fluid py-3">
+    <div className="container-fluid">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="fw-bold">Projects</h4>
-        <button className="btn btn-primary btn-sm">
-          + New Project
-        </button>
+        <h3 className="fw-bold">Projects Workspace</h3>
+        <Button variant="primary"><i className="bi bi-plus-lg me-2"></i>New Project</Button>
       </div>
-
-      <div className="row g-4">
-        {projects.map((project) => (
-          <div key={project.id} className="col-md-4">
-            <div
-              className="card shadow-sm border-0 h-100 cursor-pointer"
-              onClick={() =>
-                navigate(`/projects/${project.id}`)
-              }
-            >
-              <div className="card-body">
-                <h6 className="fw-bold">{project.name}</h6>
-                <p className="text-muted small mb-2">
-                  Client: {project.client_name}
-                </p>
-
-                <span className="badge bg-info text-dark">
-                  {project.status}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <DataTable columns={columns} data={projects} loading={loading} />
     </div>
   );
 };

@@ -1,24 +1,18 @@
-import React from "react";
-import { LeadStatus } from "../../types/crm";
+import React from 'react';
+import { LeadStatus } from '../../types/crm';
 
-interface Props {
-  status: LeadStatus;
-}
+export const LeadStatusBadge: React.FC<{ status: LeadStatus }> = ({ status }) => {
+  const config: Record<LeadStatus, { color: string; label: string }> = {
+    new: { color: 'info', label: 'New' },
+    contacted: { color: 'primary', label: 'Contacted' },
+    qualified: { color: 'warning text-dark', label: 'Qualified' },
+    converted: { color: 'success', label: 'Converted' },
+    lost: { color: 'secondary', label: 'Lost' },
+  };
 
-const statusMap: Record<LeadStatus, string> = {
-  new: "secondary",
-  contacted: "info",
-  qualified: "warning",
-  converted: "success",
-  lost: "danger",
-};
-
-const LeadStatusBadge: React.FC<Props> = ({ status }) => {
   return (
-    <span className={`badge bg-${statusMap[status]}`}>
-      {status.toUpperCase()}
+    <span className={`badge bg-${config[status].color} text-uppercase xsmall fw-bold`}>
+      {config[status].label}
     </span>
   );
 };
-
-export default LeadStatusBadge;

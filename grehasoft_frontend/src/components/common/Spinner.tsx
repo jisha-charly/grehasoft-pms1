@@ -1,20 +1,24 @@
-import React from "react";
+import React from 'react';
 
 interface Props {
-  size?: "sm" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   center?: boolean;
+  color?: string;
 }
 
-const Spinner: React.FC<Props> = ({ size = "sm", center = false }) => {
-  return (
-    <div className={center ? "text-center p-4" : ""}>
-      <div
-        className={`spinner-border ${
-          size === "lg" ? "spinner-border-lg" : "spinner-border-sm"
-        } text-primary`}
-      ></div>
+export const Spinner: React.FC<Props> = ({ size = 'md', center = false, color = 'primary' }) => {
+  const sizeMap = { sm: '1rem', md: '2rem', lg: '3rem' };
+  const content = (
+    <div 
+      className={`spinner-border text-${color}`} 
+      style={{ width: sizeMap[size], height: sizeMap[size] }} 
+      role="status"
+    >
+      <span className="visually-hidden">Loading...</span>
     </div>
   );
-};
 
-export default Spinner;
+  return center ? (
+    <div className="d-flex justify-content-center align-items-center w-100 py-5">{content}</div>
+  ) : content;
+};

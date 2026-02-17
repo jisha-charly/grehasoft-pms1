@@ -1,29 +1,25 @@
-import React from "react";
+import React from 'react';
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
-  variant?: string;
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'link' | 'outline-primary';
+  size?: 'sm' | 'lg';
+  icon?: string;
 }
 
-const Button: React.FC<Props> = ({
-  children,
-  loading = false,
-  variant = "primary",
-  className = "",
-  ...rest
-}) => {
-  return (
-    <button
-      className={`btn btn-${variant} ${className}`}
-      disabled={loading || rest.disabled}
-      {...rest}
-    >
-      {loading && (
-        <span className="spinner-border spinner-border-sm me-2"></span>
-      )}
-      {children}
-    </button>
-  );
-};
-
-export default Button;
+export const Button: React.FC<ButtonProps> = ({ 
+  children, loading, variant = 'primary', size, icon, className = '', disabled, ...props 
+}) => (
+  <button 
+    className={`btn btn-${variant} ${size ? `btn-${size}` : ''} ${className} d-inline-flex align-items-center justify-content-center`}
+    disabled={loading || disabled}
+    {...props}
+  >
+    {loading ? (
+      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+    ) : icon ? (
+      <i className={`bi ${icon} me-2`}></i>
+    ) : null}
+    {children}
+  </button>
+);

@@ -1,27 +1,48 @@
-import React from "react";
-import { LeadFollowUp } from "../../types/crm";
-import { formatDate } from "../../utils/dateHelper";
+import React from 'react';
+import { LeadFollowUp } from '../../types/crm';
+import { dateHelper } from '../../utils/dateHelper';
 
 interface Props {
   followUps: LeadFollowUp[];
 }
 
-const LeadFollowUpList: React.FC<Props> = ({ followUps }) => {
-  if (!followUps.length)
-    return <div className="text-muted small">No follow-ups yet.</div>;
-
+export const LeadFollowUpList: React.FC<Props> = ({ followUps }) => {
   return (
-    <div className="list-group">
-      {followUps.map((item) => (
-        <div key={item.id} className="list-group-item">
-          <div className="fw-bold small">{item.note}</div>
-          <div className="text-muted small">
-            {formatDate(item.created_at)}
+    <div className="lead-followup-timeline position-relative ps-4 border-start">
+      {followUps.length > 0 ? (
+        followUps.map((item) => (
+          <div key={item.id} className="mb-4 position-relative">
+            {/* Timeline Dot */}
+            <div 
+              className="position-absolute bg-white border border-primary rounded-circle shadow-sm" 
+              style={{ width: '12px', height: '12px', left: '-31px', top: '4px' }} 
+            />
+            
+            <div className="card border-0 shadow-sm">
+              <div className="card-body p-3">
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <span className="badge bg-primary-subtle text-primary text-uppercase xsmall fw-bold">
+                    {item.method}
+                  </span>
+                  <small className="text-muted">{dateHelper.formatDisplay(item.created_at)}</small>
+                </div>
+                <p className="small mb-2 text-dark">{item.notes}</p>
+                <div className="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+                  <span className="xsmall text-muted">By: <strong>{item.created_by_name}</strong></span>
+                  {item.next_followup_date && (
+                    <span className="xsmall text-warning fw-bold">
+                      <i className="bi bi-calendar-event me-1"></i>
+                      Next: {dateHelper.formatDisplay(item.next_followup_date)}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <div className="text-center py-4 text-muted small">No follow-ups recorded yet.</div>
+      )}
     </div>
   );
 };
-
-export default LeadFollowUpList;

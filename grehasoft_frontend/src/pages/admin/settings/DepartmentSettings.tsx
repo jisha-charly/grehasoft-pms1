@@ -1,83 +1,34 @@
-// src/pages/admin/settings/DepartmentSettings.tsx
-
-import React, { useState } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
-import { Navigate } from 'react-router-dom';
-import { PATHS } from '../../../routes/paths';
-
-interface DepartmentConfig {
-  name: string;
-  description: string;
-  isActive: boolean;
-}
+import React from 'react';
 
 const DepartmentSettings: React.FC = () => {
-  const { user } = useAuth();
-
-  // 🔒 Only SUPER_ADMIN can access
-  if (user?.role !== 'SUPER_ADMIN') {
-    return <Navigate to={PATHS.AUTH.UNAUTHORIZED} replace />;
-  }
-
-  const [departments, setDepartments] = useState<DepartmentConfig[]>([
-    {
-      name: 'Software',
-      description: 'Handles development, projects, tasks, and sprint boards.',
-      isActive: true,
-    },
-    {
-      name: 'Digital Marketing',
-      description: 'Manages leads, campaigns, conversions, and ROI tracking.',
-      isActive: true,
-    },
-  ]);
-
-  const toggleDepartment = (index: number) => {
-    const updated = [...departments];
-    updated[index].isActive = !updated[index].isActive;
-    setDepartments(updated);
-  };
-
   return (
     <div className="container-fluid">
       <div className="mb-4">
-        <h2 className="fw-bold">Department Settings</h2>
-        <p className="text-muted small">
-          Configure department availability and internal visibility rules.
-        </p>
+        <h3 className="fw-bold">Department Configuration</h3>
+        <p className="text-muted small">Configure domain isolation rules and service categories.</p>
       </div>
 
       <div className="row g-4">
-        {departments.map((dept, index) => (
-          <div key={dept.name} className="col-md-6">
-            <div className="card shadow-sm border-0 h-100">
-              <div className="card-body">
+        {['Software Development', 'Digital Marketing'].map((dept, idx) => (
+          <div className="col-md-6" key={idx}>
+            <div className="card border-0 shadow-sm h-100">
+              <div className="card-body p-4">
                 <div className="d-flex justify-content-between align-items-start mb-3">
-                  <div>
-                    <h5 className="fw-bold mb-1">{dept.name}</h5>
-                    <p className="text-muted small mb-0">
-                      {dept.description}
-                    </p>
+                  <div className="bg-primary text-white rounded p-2 px-3 fw-bold">
+                    {dept[0]}
                   </div>
-
-                  <div className="form-check form-switch">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      checked={dept.isActive}
-                      onChange={() => toggleDepartment(index)}
-                    />
-                  </div>
+                  <button className="btn btn-sm btn-link text-decoration-none">Edit Settings</button>
                 </div>
-
-                <div>
-                  <span
-                    className={`badge ${
-                      dept.isActive ? 'bg-success' : 'bg-secondary'
-                    }`}
-                  >
-                    {dept.isActive ? 'Active' : 'Disabled'}
-                  </span>
+                <h5 className="fw-bold">{dept}</h5>
+                <p className="text-muted small">Handles all client workflows related to {dept.toLowerCase()} services.</p>
+                <hr />
+                <div className="d-flex justify-content-between xsmall">
+                  <span className="text-muted">Domain Isolation:</span>
+                  <span className="text-success fw-bold">STRICT</span>
+                </div>
+                <div className="d-flex justify-content-between xsmall mt-2">
+                  <span className="text-muted">Kanban Columns:</span>
+                  <span>4 Columns (Standard)</span>
                 </div>
               </div>
             </div>
@@ -85,10 +36,12 @@ const DepartmentSettings: React.FC = () => {
         ))}
       </div>
 
-      <div className="mt-5">
-        <button className="btn btn-primary">
-          Save Changes
-        </button>
+      <div className="mt-5 card border-0 bg-warning-subtle p-4 border-start border-warning border-4">
+        <h6 className="fw-bold text-warning-emphasis"><i className="bi bi-info-circle me-2"></i>Data Isolation Warning</h6>
+        <p className="small mb-0 opacity-75">
+          Changing department names or slugs will affect project filtering across the entire system. 
+          Ensure all active projects are archived before modifying core department identifiers.
+        </p>
       </div>
     </div>
   );

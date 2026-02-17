@@ -1,16 +1,19 @@
-import React from "react";
+import React from 'react';
 
 interface Props {
-  message: string;
+  icon?: string;
+  title: string;
+  description?: string;
+  action?: React.ReactNode;
 }
 
-const EmptyState: React.FC<Props> = ({ message }) => {
-  return (
-    <div className="text-center py-5 text-muted">
-      <i className="bi bi-inbox fs-1 d-block mb-3"></i>
-      <p>{message}</p>
+export const EmptyState: React.FC<Props> = ({ icon = 'bi-search', title, description, action }) => (
+  <div className="text-center py-5">
+    <div className="mb-3">
+      <i className={`bi ${icon} text-muted opacity-25`} style={{ fontSize: '3rem' }}></i>
     </div>
-  );
-};
-
-export default EmptyState;
+    <h5 className="fw-bold">{title}</h5>
+    {description && <p className="text-muted mx-auto" style={{ maxWidth: '300px' }}>{description}</p>}
+    {action && <div className="mt-3">{action}</div>}
+  </div>
+);

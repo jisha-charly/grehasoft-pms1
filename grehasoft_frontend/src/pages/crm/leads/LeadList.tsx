@@ -1,105 +1,116 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { crmService } from "../../../api/crm.service";
-import { Lead } from "../../../types/crm";
-import { PATHS } from "../../../routes/paths";
+import React, { useState, useEffect, useCallback } from 'react';
+import { crmService } from '../../../api/crm.service';
+import { Lead, LeadStatus } from '../../../types/crm';
+import { DataTable } from '../../../components/common/DataTable';
+import { LeadStatusBadge } from '../../../components/crm/LeadStatusBadge';
+import { ConvertLeadModal } from '../../../components/crm/ConvertLeadModal';
+import { useDebounce } from '../../../hooks/useDebounce';
+import { Link } from 'react-router-dom';
+import { Button } from '../../../components/common/Button';
 
 const LeadList: React.FC = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [totalCount, setTotalCount] = useState(0);
+  
+  // State for Conversion Modal
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  
+  // Filters
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const debouncedSearch = useDebounce(search, 500);
 
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
+    setLoading(true);
     try {
-      const res = await crmService.getLeads();
-      setLeads(res.data.results);
-    } catch (error) {
-      console.error("Failed to fetch leads", error);
+      const response = await crmService.getLeads({
+        search: debouncedSearch,
+        status: statusFilter,
+      });
+      setLeads(response.data.results);
+      setTotalCount(response.data.count);
     } finally {
       setLoading(false);
     }
-  };
+  }, [debouncedSearch, statusFilter]);
 
-  useEffect(() => {
-    fetchLeads();
-  }, []);
+  useEffect(() => { fetchLeads(); }, [fetchLeads]);
 
-  const getBadge = (status: string) => {
-    const map: any = {
-      new: "bg-info",
-      contacted: "bg-primary",
-      qualified: "bg-warning text-dark",
-      converted: "bg-success",
-      lost: "bg-danger",
-    };
-    return (
-      <span className={`badge ${map[status] || "bg-secondary"}`}>
-        {status.toUpperCase()}
-      </span>
-    );
-  };
+  const columns = [
+    { 
+      header: 'Company / Lead', 
+      render: (lead: Lead) => (
+        <div>
+          <div className="fw-bold">{lead.company_name}</div>
+          <small className="text-muted">{lead.name}</small>
+        </div>
+      ) 
+    },
+    { header: 'Status', render: (lead: Lead) => <LeadStatusBadge status={lead.status} /> },
+    { header: 'Department', render: (lead: Lead) => <span className="text-capitalize small">{lead.department_name}</span> },
+    { 
+      header: 'Actions', 
+      render: (lead: Lead) => (
+        <div className="d-flex gap-2">
+          <Link to={`/crm/leads/${lead.id}`} className="btn btn-sm btn-outline-primary">Details</Link>
+          {lead.status === 'qualified' && (
+            <button 
+              className="btn btn-sm btn-success" 
+              onClick={() => setSelectedLead(lead)}
+            >
+              Convert
+            </button>
+          )}
+        </div>
+      ) 
+    },
+  ];
 
   return (
     <div className="container-fluid">
-      <div className="d-flex justify-content-between mb-4">
-        <h3 className="fw-bold">Leads</h3>
-        <button
-          className="btn btn-primary"
-          onClick={() => navigate(PATHS.CRM_LEADS)}
-        >
-          + Create Lead
-        </button>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="fw-bold">Leads Repository</h3>
+        <Button variant="primary"><i className="bi bi-plus-lg me-2"></i>New Lead</Button>
       </div>
 
-      <div className="card shadow-sm border-0">
-        <div className="table-responsive">
-          <table className="table table-hover align-middle mb-0">
-            <thead className="table-light small text-uppercase">
-              <tr>
-                <th>Name</th>
-                <th>Company</th>
-                <th>Status</th>
-                <th>Source</th>
-                <th className="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="text-center p-4">
-                    Loading leads...
-                  </td>
-                </tr>
-              ) : leads.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="text-center p-4">
-                    No leads found.
-                  </td>
-                </tr>
-              ) : (
-                leads.map((lead) => (
-                  <tr key={lead.id}>
-                    <td>{lead.name}</td>
-                    <td>{lead.company_name}</td>
-                    <td>{getBadge(lead.status)}</td>
-                    <td>{lead.source}</td>
-                    <td className="text-end">
-                      <button
-                        className="btn btn-sm btn-outline-primary"
-                        onClick={() =>
-                          navigate(PATHS.CRM_LEAD_DETAILS(lead.id))
-                        }
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+      <div className="card border-0 shadow-sm mb-4">
+        <div className="card-body">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <input 
+                type="text" 
+                className="form-control" 
+                placeholder="Search company, name or email..." 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="col-md-4">
+              <select className="form-select" onChange={(e) => setStatusFilter(e.target.value)}>
+                <option value="">All Statuses</option>
+                <option value="new">New</option>
+                <option value="qualified">Qualified</option>
+                <option value="converted">Converted</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
+
+      <DataTable columns={columns} data={leads} loading={loading} />
+
+      {selectedLead && (
+        <ConvertLeadModal 
+          leadId={selectedLead.id} 
+          leadName={selectedLead.company_name} 
+          onClose={() => setSelectedLead(null)}
+          onSuccess={() => {
+            setSelectedLead(null);
+            fetchLeads();
+          }}
+        />
+      )}
     </div>
   );
 };

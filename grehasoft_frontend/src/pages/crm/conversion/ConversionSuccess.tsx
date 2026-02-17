@@ -1,64 +1,30 @@
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { PATHS } from "../../../routes/paths";
+import React from 'react';
+import { useLocation, Link, Navigate } from 'react-router-dom';
 
 const ConversionSuccess: React.FC = () => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const project = location.state?.project;
 
-  // Optional project id passed after conversion
-  const projectId = (location.state as any)?.projectId;
+  if (!project) return <Navigate to="/crm/leads" />;
 
   return (
-    <div className="container py-5">
-      <div className="card shadow-sm border-0 text-center p-5">
+    <div className="container vh-100 d-flex align-items-center justify-content-center">
+      <div className="text-center bg-white p-5 rounded shadow-lg border-0" style={{ maxWidth: '500px' }}>
         <div className="mb-4">
-          <div
-            className="bg-success-subtle text-success rounded-circle d-inline-flex align-items-center justify-content-center"
-            style={{ width: 80, height: 80 }}
-          >
-            <i className="bi bi-check-lg fs-1"></i>
-          </div>
+          <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
         </div>
-
-        <h2 className="fw-bold mb-3">Lead Successfully Converted 🎉</h2>
-
+        <h2 className="fw-bold mb-3">Conversion Successful!</h2>
         <p className="text-muted mb-4">
-          The lead has been converted into a Client and a new Project has been
-          created inside the PMS module.
+          The lead for <strong>{project.client_name}</strong> has been converted. 
+          A new project workspace has been initialized in the <strong>{project.department_name}</strong> department.
         </p>
-
-        {projectId && (
-          <div className="alert alert-info small">
-            Project ID: <strong>{projectId}</strong>
-          </div>
-        )}
-
-        <div className="d-flex justify-content-center gap-3 mt-3">
-          <button
-            className="btn btn-outline-primary"
-            onClick={() => navigate(PATHS.CRM_LEADS)}
-          >
-            Back to Leads
-          </button>
-
-          {projectId && (
-            <button
-              className="btn btn-success"
-              onClick={() =>
-                navigate(PATHS.PMS_PROJECT_DETAILS(projectId))
-              }
-            >
-              Go to Project
-            </button>
-          )}
-
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate(PATHS.DASHBOARD)}
-          >
-            Go to Dashboard
-          </button>
+        <div className="d-grid gap-2">
+          <Link to={`/pms/projects/${project.id}/kanban`} className="btn btn-success fw-bold py-2">
+            Go to Project Kanban Board
+          </Link>
+          <Link to="/crm/leads" className="btn btn-link text-decoration-none">
+            Return to Leads
+          </Link>
         </div>
       </div>
     </div>

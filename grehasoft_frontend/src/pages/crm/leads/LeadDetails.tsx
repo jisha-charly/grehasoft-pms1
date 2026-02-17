@@ -1,106 +1,73 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { crmService } from "../../../api/crm.service";
-import { Lead, LeadFollowUp } from "../../../types/crm";
-import { PATHS } from "../../../routes/paths";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { crmService } from '../../../api/crm.service';
+import { Lead, LeadFollowUp } from '../../../types/crm';
+import { ActivityTimeline } from '../../../components/activity/ActivityTimeline';
+import Spinner from '../../../components/common/Spinner';
 
 const LeadDetails: React.FC = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-
+  const { id } = useParams<{ id: string }>();
   const [lead, setLead] = useState<Lead | null>(null);
-  const [followUps, setFollowUps] = useState<LeadFollowUp[]>([]);
+  const [followups, setFollowups] = useState<LeadFollowUp[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
-    try {
-      if (!id) return;
-
-      const leadRes = await crmService.getLead(Number(id));
-      const followRes = await crmService.getFollowUps(Number(id));
-
-      setLead(leadRes.data);
-      setFollowUps(followRes.data);
-    } catch (error) {
-      console.error("Error loading lead details", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
+    const loadData = async () => {
+      if (!id) return;
+      try {
+        const [leadRes, followRes] = await Promise.all([
+          crmService.getLead(Number(id)),
+          crmService.getFollowUps(Number(id))
+        ]);
+        setLead(leadRes.data);
+        setFollowups(followRes.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, [id]);
 
-  const handleConvert = async () => {
-    if (!lead) return;
-
-    try {
-      const res = await crmService.convertLead(lead.id, 1); // Replace 1 with selected PM
-      navigate(PATHS.CRM_CONVERSION_SUCCESS, {
-        state: { projectId: res.data?.id },
-      });
-    } catch (error) {
-      alert("Conversion failed");
-    }
-  };
-
-  if (loading) return <div className="p-4">Loading...</div>;
-  if (!lead) return <div className="p-4">Lead not found</div>;
+  if (loading || !lead) return <Spinner center />;
 
   return (
     <div className="container-fluid">
-      <div className="mb-4">
-        <button
-          className="btn btn-link"
-          onClick={() => navigate(PATHS.CRM_LEADS)}
-        >
-          ← Back to Leads
-        </button>
-      </div>
-
-      <div className="card shadow-sm border-0 mb-4">
-        <div className="card-body">
-          <h4 className="fw-bold">{lead.name}</h4>
-          <p className="text-muted mb-1">{lead.company_name}</p>
-          <p className="small mb-1">
-            Email: <strong>{lead.email}</strong>
-          </p>
-          <p className="small mb-1">
-            Phone: <strong>{lead.phone}</strong>
-          </p>
-          <p className="small">
-            Status:{" "}
-            <span className="badge bg-info">{lead.status.toUpperCase()}</span>
-          </p>
-
-          {lead.status === "qualified" && (
-            <button className="btn btn-success mt-3" onClick={handleConvert}>
-              Convert to Project
-            </button>
-          )}
+      <div className="row g-4">
+        <div className="col-md-4">
+          <div className="card border-0 shadow-sm sticky-top" style={{ top: '80px' }}>
+            <div className="card-body">
+              <h5 className="fw-bold mb-3">{lead.company_name}</h5>
+              <div className="mb-3">
+                <label className="xsmall text-muted text-uppercase fw-bold">Primary Contact</label>
+                <div>{lead.name}</div>
+              </div>
+              <div className="mb-3">
+                <label className="xsmall text-muted text-uppercase fw-bold">Contact Info</label>
+                <div className="small text-primary">{lead.email}</div>
+                <div className="small">{lead.phone}</div>
+              </div>
+              <hr />
+              <button className="btn btn-outline-primary w-100 mb-2">Edit Details</button>
+              <button className="btn btn-primary w-100">Log Call</button>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Follow-ups Section */}
-      <div className="card shadow-sm border-0">
-        <div className="card-body">
-          <h5 className="fw-bold mb-3">Follow-Ups</h5>
-
-          {followUps.length === 0 ? (
-            <p className="text-muted">No follow-ups recorded.</p>
-          ) : (
-            <ul className="list-group list-group-flush">
-              {followUps.map((f) => (
-                <li key={f.id} className="list-group-item">
-                  <div className="small text-muted">
-                    {new Date(f.created_at).toLocaleString()}
-                  </div>
-                  <div>{f.note}</div>
-                </li>
-              ))}
-            </ul>
-          )}
+        <div className="col-md-8">
+          <div className="card border-0 shadow-sm p-4">
+            <h6 className="fw-bold mb-4">Engagement Timeline</h6>
+            {followups.length > 0 ? (
+              // Map followups to ActivityLog type format for reusability
+              <ActivityTimeline logs={followups.map(f => ({
+                id: f.id,
+                action: f.notes,
+                created_at: f.created_at,
+                user_full_name: f.created_by_name,
+                department_name: lead.department_name
+              })) as any} />
+            ) : (
+              <p className="text-muted text-center py-5 small">No interactions logged yet.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

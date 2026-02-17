@@ -1,20 +1,39 @@
-import { ReactNode } from "react";
+import React from 'react';
+import { Outlet, Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { PATHS } from '../routes/paths';
 
-interface Props {
-  children: ReactNode;
-}
+const AuthLayout: React.FC = () => {
+  const { isAuthenticated } = useAuth();
 
-const AuthLayout = ({ children }: Props) => {
+  // Redirect to dashboard if user is already logged in
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
-    <div className="auth-layout d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="auth-card card shadow-lg border-0 p-4" style={{ width: 400 }}>
-        <div className="text-center mb-4">
-          <h4 className="fw-bold text-primary">Grehasoft PMS</h4>
-          <small className="text-muted">
-            {import.meta.env.VITE_APP_NAME}
-          </small>
+    <div className="auth-layout bg-light min-vh-100 d-flex flex-column">
+      <div className="container my-auto py-5">
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-8 col-lg-5 col-xl-4">
+            {/* Logo Section */}
+            <div className="text-center mb-4">
+              <h1 className="h2 fw-bold text-primary mb-1">Grehasoft</h1>
+              <p className="text-muted small uppercase fw-semibold tracking-wider">
+                Enterprise PMS & CRM
+              </p>
+            </div>
+            
+            {/* Page Content injected here */}
+            <Outlet />
+
+            <div className="text-center mt-4">
+              <p className="small text-muted">
+                &copy; {new Date().getFullYear()} Grehasoft Solutions. All rights reserved.
+              </p>
+            </div>
+          </div>
         </div>
-        {children}
       </div>
     </div>
   );

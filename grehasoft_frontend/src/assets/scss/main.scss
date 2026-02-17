@@ -1,12 +1,162 @@
-// 1. Import variables first
-@import "./variables";
+// 1. Import Theme Variables
+@import "variables";
 
-// 2. Import Bootstrap
+// 2. Import Bootstrap 5
 @import "bootstrap/scss/bootstrap";
 
-// 3. Custom Modules
-@import "./layout";
-@import "./components";
-@import "./kanban";
-@import "./dashboard";
-@import "./utilities";
+// 3. Global Layout Utilities
+// ==============================================================================
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+.custom-scrollbar {
+  &::-webkit-scrollbar { width: 6px; height: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { 
+    background: #cbd5e1; 
+    border-radius: 10px; 
+    &:hover { background: #94a3b8; }
+  }
+}
+
+// 4. Sidebar & Layout
+// ==============================================================================
+
+.main-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: $sidebar-width;
+  background-color: $sidebar-bg;
+  border-right: 1px solid #e2e8f0;
+  transition: transform 0.3s ease;
+  z-index: 1030;
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: $secondary;
+    font-weight: 500;
+    border-radius: $border-radius-sm;
+    margin: 0.125rem 0.75rem;
+
+    i { font-size: 1.1rem; margin-right: 0.75rem; }
+
+    &:hover {
+      background-color: $light;
+      color: $primary;
+    }
+
+    &.active {
+      background-color: rgba($info, 0.1);
+      color: $info;
+    }
+  }
+}
+
+.topbar {
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 1.5rem;
+}
+
+// 5. Kanban Board Styling
+// ==============================================================================
+
+.kanban-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  height: calc(100vh - 150px);
+}
+
+.kanban-column {
+  background-color: #f1f5f9;
+  border-radius: $border-radius;
+  min-width: 300px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+
+  .column-header {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $secondary;
+    letter-spacing: 0.025em;
+    margin-bottom: 1rem;
+    padding: 0 0.25rem;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.kanban-card {
+  background: #fff;
+  border-radius: $border-radius-sm;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: $card-shadow;
+  border-left: 4px solid transparent;
+  cursor: grab;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active { cursor: grabbing; }
+
+  // Priority Borders
+  &.priority-critical { border-left-color: $danger; }
+  &.priority-high { border-left-color: $warning; }
+  &.priority-medium { border-left-color: $info; }
+  &.priority-low { border-left-color: $secondary; }
+}
+
+// 6. Enterprise Data Visualization
+// ==============================================================================
+
+.kpi-card {
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+  &:hover { border-color: rgba($info, 0.3); }
+  
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: $border-radius-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+}
+
+.table-dense {
+  font-size: 0.8125rem;
+  th { font-weight: 600; text-transform: uppercase; letter-spacing: 0.025em; }
+}
+
+// 7. Animations
+// ==============================================================================
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

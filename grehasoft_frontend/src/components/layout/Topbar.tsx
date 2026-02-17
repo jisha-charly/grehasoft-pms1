@@ -1,18 +1,32 @@
-import React from "react";
-import { useAuth } from "../../hooks/useAuth";
-import UserProfileDropdown from "./UserProfileDropdown";
+import React from 'react';
+import UserProfileDropdown from './UserProfileDropdown';
 
-const Topbar: React.FC = () => {
-  const { user } = useAuth();
+interface Props {
+  onToggleSidebar: () => void;
+  isSidebarOpen: boolean;
+}
 
+const Topbar: React.FC<Props> = ({ onToggleSidebar }) => {
   return (
-    <div className="d-flex justify-content-between align-items-center bg-white border-bottom px-4 py-2 shadow-sm">
-      <h6 className="mb-0 fw-bold">
-        {user?.department?.replace("_", " ").toUpperCase()} Dashboard
-      </h6>
+    <header className="topbar d-flex align-items-center justify-content-between px-4">
+      <div className="d-flex align-items-center gap-3">
+        <button className="btn btn-light btn-sm rounded-circle" onClick={onToggleSidebar}>
+          <i className="bi bi-list fs-5"></i>
+        </button>
+        <div className="input-group input-group-sm d-none d-lg-flex" style={{ width: '300px' }}>
+          <span className="input-group-text bg-light border-0"><i className="bi bi-search"></i></span>
+          <input type="text" className="form-control bg-light border-0" placeholder="Global Search..." />
+        </div>
+      </div>
 
-      <UserProfileDropdown />
-    </div>
+      <div className="d-flex align-items-center gap-3">
+        <button className="btn btn-light btn-sm rounded-circle position-relative">
+          <i className="bi bi-bell"></i>
+          <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+        </button>
+        <UserProfileDropdown />
+      </div>
+    </header>
   );
 };
 

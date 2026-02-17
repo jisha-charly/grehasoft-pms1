@@ -1,47 +1,21 @@
-import React from "react";
-import { format } from "date-fns";
-import { ActivityLog } from "../../types/activity";
+import React from 'react';
+import { ActivityLog } from '../../../types/activity';
+import { dateHelper } from '../../../utils/dateHelper';
 
-interface Props {
-  log: ActivityLog;
-}
-
-const ActivityItem: React.FC<Props> = ({ log }) => {
-  return (
-    <div className="list-group-item border-start border-4 border-info p-3">
-      <div className="d-flex justify-content-between align-items-start">
-        <div>
-          <div className="fw-semibold text-dark">{log.action}</div>
-
-          <div className="small text-muted mt-1">
-            By <span className="fw-medium text-primary">{log.user_full_name}</span>
-            {log.project_name && (
-              <>
-                {" "}
-                on project{" "}
-                <span className="fw-medium text-dark">
-                  {log.project_name}
-                </span>
-              </>
-            )}
-          </div>
-
-          <span className="badge bg-light text-dark border mt-2">
-            {log.department_name}
-          </span>
-        </div>
-
-        <div className="text-end">
-          <div className="small fw-semibold">
-            {format(new Date(log.created_at), "HH:mm:ss")}
-          </div>
-          <div className="small text-muted">
-            {format(new Date(log.created_at), "MMM dd, yyyy")}
-          </div>
+export const ActivityItem: React.FC<{ log: ActivityLog }> = ({ log }) => (
+  <div className="position-relative mb-4">
+    <div className="position-absolute bg-primary rounded-circle" 
+      style={{ width: '12px', height: '12px', left: '-22px', top: '4px', border: '2px solid white' }}></div>
+    <div className="d-flex justify-content-between align-items-start">
+      <div>
+        <div className="fw-bold small">{log.action}</div>
+        <div className="xsmall text-muted">
+          {log.user_full_name} • <span className="text-uppercase">{log.department_name}</span>
         </div>
       </div>
+      <div className="text-end xsmall text-muted">
+        {dateHelper.formatRelative(log.created_at)}
+      </div>
     </div>
-  );
-};
-
-export default ActivityItem;
+  </div>
+);

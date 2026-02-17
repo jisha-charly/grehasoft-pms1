@@ -1,99 +1,51 @@
-import React, { useEffect, useState } from "react";
-import { pmsService } from "../../../api/pms.service";
-import { Comment } from "../../../types/pms";
-import { useAuth } from "../../../hooks/useAuth";
-import CommentItem from "./CommentItem";
+import React, { useState, useEffect } from 'react';
+import api from '../../../api/axiosInstance';
+import { TaskComment } from '../../../types/pms';
+import { CommentItem } from './CommentItem';
+import { useAuth } from '../../../context/AuthContext';
+import { Button } from '../../common/Button';
 
-interface Props {
-  taskId: number;
-}
-
-const CommentSection: React.FC<Props> = ({ taskId }) => {
+export const CommentSection: React.FC<{ taskId: number }> = ({ taskId }) => {
   const { user } = useAuth();
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState<TaskComment[]>([]);
+  const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const fetchComments = async () => {
-    try {
-      const response = await pmsService.getTaskComments(taskId);
-      setComments(response.data);
-    } catch (error) {
-      console.error("Failed to fetch comments");
-    }
-  };
-
   useEffect(() => {
-    fetchComments();
+    api.get<TaskComment[]>(`pms/task-comments/?task=${taskId}`).then(res => setComments(res.data));
   }, [taskId]);
 
-  const handleSubmit = async () => {
+  const handlePost = async () => {
     if (!newComment.trim()) return;
-
     setLoading(true);
     try {
-      await pmsService.addTaskComment({
-        task: taskId,
-        content: newComment,
-      });
-
-      setNewComment("");
-      fetchComments();
-    } catch (error) {
-      console.error("Failed to post comment");
+      const res = await api.post<TaskComment>('pms/task-comments/', { task: taskId, comment: newComment });
+      setComments([...comments, res.data]);
+      setNewComment('');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="card border-0 shadow-sm mt-4">
-      <div className="card-body">
-        <h6 className="fw-bold mb-3">Discussion</h6>
-
-        {/* Comment List */}
-        <div
-          style={{
-            maxHeight: "300px",
-            overflowY: "auto",
-          }}
-          className="mb-3"
-        >
-          {comments.length === 0 ? (
-            <div className="text-muted small text-center py-3">
-              No comments yet.
-            </div>
-          ) : (
-            comments.map((comment) => (
-              <CommentItem
-                key={comment.id}
-                comment={comment}
-                currentUserId={user?.id}
-              />
-            ))
-          )}
-        </div>
-
-        {/* Add Comment */}
-        <div className="d-flex">
-          <input
-            type="text"
-            className="form-control me-2"
-            placeholder="Write a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <button
-            className="btn btn-primary"
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {loading ? "Posting..." : "Send"}
-          </button>
+    <div className="d-flex flex-column h-100">
+      <h6 className="fw-bold xsmall text-uppercase text-muted mb-3">Discussions</h6>
+      <div className="flex-grow-1 overflow-auto custom-scrollbar pe-2 mb-3" style={{ maxHeight: '400px' }}>
+        {comments.map(c => <CommentItem key={c.id} comment={c} isOwn={c.user === user?.id} />)}
+      </div>
+      <div className="mt-auto border-top pt-3">
+        <textarea 
+          className="form-control form-control-sm mb-2" 
+          placeholder="Write a message..."
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+        />
+        <div className="text-end">
+          <Button variant="primary" size="sm" onClick={handlePost} loading={loading}>
+            Post Comment
+          </Button>
         </div>
       </div>
     </div>
   );
 };
-
-export default CommentSection;

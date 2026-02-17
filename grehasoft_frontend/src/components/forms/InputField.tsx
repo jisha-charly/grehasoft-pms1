@@ -1,47 +1,22 @@
-import React from "react";
+import React from 'react';
 
-interface InputFieldProps {
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  name: string;
-  type?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
   error?: string;
-  required?: boolean;
-  disabled?: boolean;
+  helperText?: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({
-  label,
-  name,
-  type = "text",
-  value,
-  onChange,
-  placeholder,
-  error,
-  required = false,
-  disabled = false,
-}) => {
-  return (
-    <div className="mb-3">
-      <label className="form-label fw-semibold">
-        {label} {required && <span className="text-danger">*</span>}
-      </label>
-
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        disabled={disabled}
-        className={`form-control ${error ? "is-invalid" : ""}`}
-      />
-
-      {error && <div className="invalid-feedback">{error}</div>}
-    </div>
-  );
-};
-
-export default InputField;
+export const InputField: React.FC<Props> = ({ label, error, helperText, className = '', ...props }) => (
+  <div className="mb-3">
+    <label className="form-label xsmall fw-bold text-muted text-uppercase">{label}</label>
+    <input 
+      className={`form-control ${error ? 'is-invalid' : ''} ${className}`} 
+      {...props} 
+    />
+    {error ? (
+      <div className="invalid-feedback xsmall">{error}</div>
+    ) : helperText ? (
+      <div className="form-text xsmall">{helperText}</div>
+    ) : null}
+  </div>
+);

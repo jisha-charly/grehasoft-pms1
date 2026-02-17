@@ -1,43 +1,58 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import SidebarItem from "./SidebarItem";
+import React from 'react';
+import { SidebarItem } from './SidebarItem';
+import { useAuth } from '../../hooks/useAuth';
+import { PATHS } from '../../routes/paths';
 
-const Sidebar: React.FC = () => {
+interface Props {
+  isOpen: boolean;
+  toggleSidebar: () => void;
+}
+
+const Sidebar: React.FC<Props> = ({ isOpen }) => {
   const { user } = useAuth();
+  const deptName = user?.department?.name || 'Global Admin';
 
   return (
-    <div
-      className="bg-dark text-white p-3"
-      style={{ width: "250px", minHeight: "100vh" }}
-    >
-      <h5 className="mb-4 fw-bold">Grehasoft PMS</h5>
+    <aside className={`sidebar custom-scrollbar ${isOpen ? 'show' : 'hide'}`}>
+      <div className="d-flex flex-column h-100">
+        <div className="sidebar-header p-4">
+          <h5 className="fw-bold text-primary mb-0">Grehasoft</h5>
+          <small className="text-muted text-uppercase xsmall fw-bold">{deptName}</small>
+        </div>
 
-      <ul className="nav flex-column">
+        <nav className="flex-grow-1">
+          <div className="px-3 mb-2 small text-muted text-uppercase fw-bold xsmall">General</div>
+          <SidebarItem to="/" label="Dashboard" icon="bi-grid-1x2" />
+          
+          <div className="px-3 mt-4 mb-2 small text-muted text-uppercase fw-bold xsmall">Sales & Clients</div>
+          <SidebarItem 
+            to={PATHS.CRM.LEADS} 
+            label="Leads" 
+            icon="bi-person-plus" 
+            allowedRoles={['SUPER_ADMIN', 'SALES_EXECUTIVE']} 
+          />
+          <SidebarItem to={PATHS.CRM.CLIENTS} label="Clients" icon="bi-building" />
 
-        <SidebarItem to="/" icon="bi-speedometer2" label="Dashboard" />
+          <div className="px-3 mt-4 mb-2 small text-muted text-uppercase fw-bold xsmall">Execution</div>
+          <SidebarItem to={PATHS.PMS.PROJECTS} label="Projects" icon="bi-kanban" />
+          <SidebarItem to={PATHS.PMS.MY_TASKS} label="My Tasks" icon="bi-check2-square" />
 
-        {user?.department === "digital_marketing" && (
-          <SidebarItem to="/crm/leads" icon="bi-people" label="Leads" />
-        )}
-
-        {user?.department === "software" && (
-          <>
-            <SidebarItem to="/pms/projects" icon="bi-kanban" label="Projects" />
-            <SidebarItem to="/pms/my-tasks" icon="bi-list-task" label="My Tasks" />
-          </>
-        )}
-
-        {user?.role === "SUPER_ADMIN" && (
-          <>
-            <hr className="text-secondary" />
-            <SidebarItem to="/admin/users" icon="bi-person-gear" label="Users" />
-            <SidebarItem to="/admin/activity" icon="bi-clock-history" label="Audit Logs" />
-          </>
-        )}
-
-      </ul>
-    </div>
+          <div className="px-3 mt-4 mb-2 small text-muted text-uppercase fw-bold xsmall">Administration</div>
+          <SidebarItem 
+            to={PATHS.ADMIN.USERS} 
+            label="Staff Directory" 
+            icon="bi-people" 
+            allowedRoles={['SUPER_ADMIN']} 
+          />
+          <SidebarItem 
+            to={PATHS.ADMIN.AUDIT_LOGS} 
+            label="Audit Trail" 
+            icon="bi-shield-check" 
+            allowedRoles={['SUPER_ADMIN']} 
+          />
+        </nav>
+      </div>
+    </aside>
   );
 };
 

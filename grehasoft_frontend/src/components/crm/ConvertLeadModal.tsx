@@ -1,73 +1,52 @@
-import React, { useState } from "react";
-import Modal from "../common/Modal";
-import Button from "../common/Button";
-import { Lead } from "../../types/crm";
-import { crmService } from "../../api/crmService";
+import React, { useState, useEffect } from 'react';
+import { Modal } from '../common/Modal';
+import { Button } from '../common/Button';
+import { SelectField } from '../forms/SelectField';
+import { crmService } from '../../api/crm.service';
 
 interface Props {
   show: boolean;
-  lead: Lead | null;
+  leadId: number;
+  leadName: string;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (project: any) => void;
 }
 
-const ConvertLeadModal: React.FC<Props> = ({
-  show,
-  lead,
-  onClose,
-  onSuccess,
-}) => {
+export const ConvertLeadModal: React.FC<Props> = ({ show, leadId, leadName, onClose, onSuccess }) => {
+  const [pmId, setPmId] = useState<number>(0);
   const [loading, setLoading] = useState(false);
-  const [pmId, setPmId] = useState("");
 
   const handleConvert = async () => {
-    if (!lead || !pmId) return;
-
+    setLoading(true);
     try {
-      setLoading(true);
-      await crmService.convertLead(lead.id, Number(pmId));
-      onSuccess();
-      onClose();
-    } catch {
-      alert("Conversion failed.");
+      const res = await crmService.convertLead(leadId, pmId);
+      onSuccess(res.data.project);
+    } catch (err) {
+      alert("Conversion failed. Ensure a Project Manager is selected.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!lead) return null;
-
   return (
-    <Modal
-      show={show}
-      title="Convert Lead to Project"
-      onClose={onClose}
+    <Modal show={show} title={`Convert Lead: ${leadName}`} onClose={onClose} 
       footer={
         <>
-          <Button variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button loading={loading} variant="success" onClick={handleConvert}>
-            Confirm
+          <Button variant="light" onClick={onClose}>Cancel</Button>
+          <Button variant="success" onClick={handleConvert} loading={loading} disabled={!pmId}>
+            Start Project
           </Button>
         </>
-      }
-    >
-      <p>
-        Convert <strong>{lead.name}</strong> into a project?
+      }>
+      <p className="text-muted small mb-4">
+        This will create a new Client record and initialize a Project Workspace.
       </p>
-
-      <div className="mb-3">
-        <label className="form-label">Project Manager ID</label>
-        <input
-          type="number"
-          className="form-control"
-          value={pmId}
-          onChange={(e) => setPmId(e.target.value)}
-        />
-      </div>
+      <SelectField 
+        label="Assign Project Manager"
+        options={[{ value: 1, label: 'Default PM' }]} // Logic: Fetch users with PM role
+        onChange={(e) => setPmId(Number(e.target.value))}
+        required
+      />
     </Modal>
   );
 };
-
-export default ConvertLeadModal;

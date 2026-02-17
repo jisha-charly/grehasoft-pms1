@@ -1,55 +1,25 @@
-import React from "react";
+import React from 'react';
 
 interface Option {
-  label: string;
   value: string | number;
+  label: string;
 }
 
-interface SelectFieldProps {
+interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
-  name: string;
-  value: string | number;
   options: Option[];
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   error?: string;
-  required?: boolean;
-  disabled?: boolean;
 }
 
-const SelectField: React.FC<SelectFieldProps> = ({
-  label,
-  name,
-  value,
-  options,
-  onChange,
-  error,
-  required = false,
-  disabled = false,
-}) => {
-  return (
-    <div className="mb-3">
-      <label className="form-label fw-semibold">
-        {label} {required && <span className="text-danger">*</span>}
-      </label>
-
-      <select
-        name={name}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
-        className={`form-select ${error ? "is-invalid" : ""}`}
-      >
-        <option value="">Select {label}</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-
-      {error && <div className="invalid-feedback">{error}</div>}
-    </div>
-  );
-};
-
-export default SelectField;
+export const SelectField: React.FC<Props> = ({ label, options, error, ...props }) => (
+  <div className="mb-3">
+    <label className="form-label xsmall fw-bold text-muted text-uppercase">{label}</label>
+    <select className={`form-select ${error ? 'is-invalid' : ''}`} {...props}>
+      <option value="">Select an option</option>
+      {options.map((opt) => (
+        <option key={opt.value} value={opt.value}>{opt.label}</option>
+      ))}
+    </select>
+    {error && <div className="invalid-feedback xsmall">{error}</div>}
+  </div>
+);

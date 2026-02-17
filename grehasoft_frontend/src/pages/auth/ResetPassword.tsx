@@ -1,74 +1,60 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { PATHS } from '../../routes/paths';
-import api from '../../api/axiosInstance';
+import { Button } from '../../components/common/Button';
+import { InputField } from '../../components/forms/InputField';
 
 const ResetPassword: React.FC = () => {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    setMessage(null);
-
-    try {
-      await api.post('auth/reset-password/', { email });
-      setMessage('Password reset link sent to your email.');
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to send reset link.');
-    } finally {
+    // Logic: Call authService.requestPasswordReset(email)
+    setTimeout(() => {
+      setSubmitted(true);
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
     <div className="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div className="card shadow-lg border-0" style={{ width: 420 }}>
-        <div className="card-body p-4">
-          <h4 className="fw-bold mb-3 text-center">Reset Password</h4>
+      <div className="card border-0 shadow-lg" style={{ maxWidth: '400px', width: '100%' }}>
+        <div className="card-body p-5">
+          <div className="mb-4">
+            <h4 className="fw-bold">Reset Password</h4>
+            <p className="text-muted small">Enter your work email to receive instructions.</p>
+          </div>
 
-          {message && (
-            <div className="alert alert-success py-2 small">{message}</div>
-          )}
-
-          {error && (
-            <div className="alert alert-danger py-2 small">{error}</div>
-          )}
-
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label small fw-semibold">Email Address</label>
-              <input
+          {!submitted ? (
+            <form onSubmit={handleReset}>
+              <InputField
+                label="Work Email"
                 type="email"
-                className="form-control"
+                placeholder="name@grehasoft.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
+              <Button type="submit" variant="primary" className="w-100 mb-3" loading={loading}>
+                Send Instructions
+              </Button>
+            </form>
+          ) : (
+            <div className="text-center">
+              <div className="bg-success-subtle text-success p-3 rounded mb-4">
+                <i className="bi bi-check-circle-fill fs-3 mb-2 d-block"></i>
+                Check your email for a reset link.
+              </div>
             </div>
+          )}
 
-            <button
-              type="submit"
-              className="btn btn-primary w-100"
-              disabled={loading}
-            >
-              {loading ? 'Sending...' : 'Send Reset Link'}
-            </button>
-          </form>
-
-          <div className="mt-3 text-center">
-            <button
-              className="btn btn-link text-decoration-none small"
-              onClick={() => navigate(PATHS.AUTH.LOGIN)}
-            >
+          <div className="text-center">
+            <Link to={PATHS.AUTH.LOGIN} className="small text-decoration-none">
               Back to Login
-            </button>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,43 +1,43 @@
-// ===============================
-// DATE FORMAT HELPERS
-// ===============================
+import { format, formatDistanceToNow, isValid, parseISO } from 'date-fns';
 
-export const formatDate = (dateString?: string) => {
-  if (!dateString) return '-';
-  const date = new Date(dateString);
+/**
+ * Grehasoft Date Utility
+ * Formats backend ISO strings for enterprise UI components.
+ */
 
-  return date.toLocaleDateString('en-IN', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
-};
+export const dateHelper = {
+  // Standard Display: "Oct 12, 2023"
+  formatDisplay: (dateStr: string | null | undefined): string => {
+    if (!dateStr) return 'N/A';
+    const date = parseISO(dateStr);
+    return isValid(date) ? format(date, 'MMM dd, yyyy') : 'Invalid Date';
+  },
 
-export const formatDateTime = (dateString?: string) => {
-  if (!dateString) return '-';
-  const date = new Date(dateString);
+  // Detailed Display (Audit Logs): "Oct 12, 2023 14:30"
+  formatDateTime: (dateStr: string | null | undefined): string => {
+    if (!dateStr) return 'N/A';
+    const date = parseISO(dateStr);
+    return isValid(date) ? format(date, 'MMM dd, yyyy HH:mm') : 'Invalid Date';
+  },
 
-  return date.toLocaleString('en-IN', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-};
+  // Relative Time (Activity Feed): "2 hours ago"
+  formatRelative: (dateStr: string | null | undefined): string => {
+    if (!dateStr) return 'N/A';
+    const date = parseISO(dateStr);
+    return isValid(date) ? formatDistanceToNow(date, { addSuffix: true }) : 'Invalid Date';
+  },
 
-export const getRelativeTime = (dateString?: string) => {
-  if (!dateString) return '';
+  // Form Input (YYYY-MM-DD)
+  formatForInput: (dateStr: string | null | undefined): string => {
+    if (!dateStr) return '';
+    const date = parseISO(dateStr);
+    return isValid(date) ? format(date, 'yyyy-MM-dd') : '';
+  },
 
-  const date = new Date(dateString);
-  const now = new Date();
-
-  const diff = now.getTime() - date.getTime();
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-
-  if (minutes < 60) return `${minutes} min ago`;
-  if (hours < 24) return `${hours} hrs ago`;
-  return `${days} days ago`;
+  // Check if a task is overdue
+  isOverdue: (dueDateStr: string | null | undefined): boolean => {
+    if (!dueDateStr) return false;
+    const date = parseISO(dueDateStr);
+    return isValid(date) && date < new Date();
+  }
 };

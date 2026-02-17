@@ -1,116 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { crmService } from '../../../api/crm.service';
 import { Client } from '../../../types/crm';
-import { PATHS } from '../../../routes/paths';
+import { DataTable } from '../../../components/common/DataTable';
 
 const ClientList: React.FC = () => {
-  const navigate = useNavigate();
-
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
-  const [totalCount, setTotalCount] = useState(0);
-  const [page, setPage] = useState(1);
-
-  const fetchClients = async () => {
-    try {
-      const res = await crmService.getClients({
-        limit: 10,
-        offset: (page - 1) * 10,
-      });
-
-      setClients(res.data.results);
-      setTotalCount(res.data.count);
-    } catch (err) {
-      console.error('Failed to fetch clients');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchClients();
-  }, [page]);
+    crmService.getClients().then(res => {
+      setClients(res.data.results);
+      setLoading(false);
+    });
+  }, []);
+
+  const columns = [
+    { header: 'Client Name', key: 'company_name', render: (c: Client) => <span className="fw-bold">{c.company_name}</span> },
+    { header: 'Point of Contact', key: 'name' },
+    { header: 'Email', key: 'email' },
+    { header: 'Department', key: 'department_name' },
+    { 
+      header: 'Actions', 
+      render: (c: Client) => (
+        <button className="btn btn-sm btn-light">View Projects</button>
+      ) 
+    },
+  ];
 
   return (
     <div className="container-fluid">
-      <div className="mb-4 d-flex justify-content-between align-items-center">
-        <h4 className="fw-bold mb-0">Clients</h4>
-        <span className="text-muted small">
-          Total Clients: {totalCount}
-        </span>
-      </div>
-
-      <div className="card shadow-sm border-0">
-        <div className="table-responsive">
-          <table className="table table-hover align-middle mb-0">
-            <thead className="table-light">
-              <tr>
-                <th>Name</th>
-                <th>Company</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Projects</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="text-center py-4">
-                    Loading...
-                  </td>
-                </tr>
-              ) : clients.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="text-center py-4">
-                    No clients found.
-                  </td>
-                </tr>
-              ) : (
-                clients.map((client) => (
-                  <tr
-                    key={client.id}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() =>
-                      navigate(`${PATHS.CRM.CLIENTS}/${client.id}`)
-                    }
-                  >
-                    <td className="fw-semibold">{client.name}</td>
-                    <td>{client.company_name}</td>
-                    <td>{client.email}</td>
-                    <td>{client.phone}</td>
-                    <td>
-                      <span className="badge bg-primary">
-                        {client.project_count || 0}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="card-footer d-flex justify-content-between">
-          <button
-            className="btn btn-outline-primary btn-sm"
-            disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
-          >
-            Previous
-          </button>
-
-          <button
-            className="btn btn-outline-primary btn-sm"
-            disabled={clients.length < 10}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      <h3 className="fw-bold mb-4">Active Clients</h3>
+      <DataTable columns={columns} data={clients} loading={loading} />
     </div>
   );
 };

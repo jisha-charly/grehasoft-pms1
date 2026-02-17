@@ -1,17 +1,16 @@
-import React from "react";
+import React from 'react';
 
-const ProjectProgress = ({ progress }: { progress: number }) => {
-  return (
-    <div>
-      <div className="progress" style={{ height: 6 }}>
-        <div
-          className="progress-bar"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-      <small className="text-muted">{progress}% Complete</small>
+export const ProjectProgress: React.FC<{ percentage: number }> = ({ percentage }) => (
+  <div className="w-100">
+    <div className="d-flex justify-content-between xsmall mb-1">
+      <span className="fw-bold">{percentage}% Complete</span>
     </div>
-  );
-};
-
-export default ProjectProgress;
+    <div className="progress" style={{ height: '6px' }}>
+      <div 
+        className={`progress-bar bg-${percentage === 100 ? 'success' : 'primary'}`} 
+        role="progressbar" 
+        style={{ width: `${percentage}%` }}
+      ></div>
+    </div>
+  </div>
+);

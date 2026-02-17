@@ -1,39 +1,14 @@
-import React from "react";
+import React from 'react';
 
-interface DatePickerProps {
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
-  required?: boolean;
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({
-  label,
-  name,
-  value,
-  onChange,
-  error,
-  required = false,
-}) => {
-  return (
-    <div className="mb-3">
-      <label className="form-label fw-semibold">
-        {label} {required && <span className="text-danger">*</span>}
-      </label>
-
-      <input
-        type="date"
-        name={name}
-        value={value}
-        onChange={onChange}
-        className={`form-control ${error ? "is-invalid" : ""}`}
-      />
-
-      {error && <div className="invalid-feedback">{error}</div>}
-    </div>
-  );
-};
-
-export default DatePicker;
+export const DatePicker: React.FC<Props> = ({ label, error, ...props }) => (
+  <div className="mb-3">
+    <label className="form-label xsmall fw-bold text-muted text-uppercase">{label}</label>
+    <input type="date" className={`form-control ${error ? 'is-invalid' : ''}`} {...props} />
+    {error && <div className="invalid-feedback xsmall">{error}</div>}
+  </div>
+);

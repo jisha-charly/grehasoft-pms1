@@ -1,26 +1,37 @@
-import React from "react";
-import { Task } from "../../../types/pms";
-import KanbanTaskCard from "./KanbanTaskCard";
+import React from 'react';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Task } from '../../../types/pms';
+import { KanbanTaskCard } from './KanbanTaskCard';
 
 interface Props {
-  status: string;
+  id: string;
+  title: string;
   tasks: Task[];
 }
 
-const KanbanColumn: React.FC<Props> = ({ status, tasks }) => {
-  return (
-    <div className="col-md-3" style={{ minWidth: 280 }}>
-      <div className="bg-light rounded p-3 h-100">
-        <h6 className="fw-bold text-capitalize mb-3">
-          {status.replace("_", " ")} ({tasks.length})
-        </h6>
+export const KanbanColumn: React.FC<Props> = ({ id, title, tasks }) => {
+  const { setNodeRef } = useDroppable({ id });
 
-        {tasks.map((task) => (
-          <KanbanTaskCard key={task.id} task={task} />
-        ))}
+  return (
+    <div ref={setNodeRef} className="kanban-column shadow-sm border">
+      <div className="column-header mb-3">
+        <span>{title}</span>
+        <span className="badge bg-white text-muted border px-2">{tasks.length}</span>
       </div>
+      
+      <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
+        <div className="kanban-task-list flex-grow-1">
+          {tasks.map((task) => (
+            <KanbanTaskCard key={task.id} task={task} />
+          ))}
+          {tasks.length === 0 && (
+            <div className="text-center py-4 opacity-25 small border border-dashed rounded-3">
+              Drop tasks here
+            </div>
+          )}
+        </div>
+      </SortableContext>
     </div>
   );
 };
-
-export default KanbanColumn;
