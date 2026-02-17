@@ -1,9 +1,7 @@
 export interface ActivityLog {
   id: number;
-  user: number;
+  user?: number;               // optional if backend still sends it
+  user_full_name: string;      // 👈 ADD THIS
   action: string;
-  model_name: string;
-  object_id: number;
-  timestamp: string;
-  description?: string;
+  created_at: string;
 }

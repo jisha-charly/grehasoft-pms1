@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { reportService } from '../../../api/report.service';
-import { ActivityLog } from '../../../types/activity';
+import type { ActivityLog } from '../../../types/activity';
+
+
 
 const ActivityLogs = () => {
   const [logs, setLogs] = useState<ActivityLog[]>([]);

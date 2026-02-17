@@ -1,5 +1,14 @@
 import api from './axiosInstance';
-import { Project, Task, TaskFile, Milestone, PaginatedResponse } from '../types/pms';
+import type {
+  Project,
+  Task,
+  TaskFile,
+  Milestone
+} from '../types/pms';
+
+import type { PaginatedResponse } from '../types/common';
+
+
 
 export const pmsService = {
   // Projects
