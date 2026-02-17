@@ -1,0 +1,12 @@
+// 1. Import variables first
+@import "./variables";
+
+// 2. Import Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+// 3. Custom Modules
+@import "./layout";
+@import "./components";
+@import "./kanban";
+@import "./dashboard";
+@import "./utilities";

@@ -1,42 +1,98 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* ======================================
+   MAIN APP LAYOUT
+====================================== */
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background-color: #1f2937;
+  color: #ffffff;
+  transition: width 0.3s ease;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.sidebar.collapsed {
+  width: 70px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Sidebar Links */
+.sidebar a {
+  color: #cbd5e1;
+  text-decoration: none;
 }
 
-.card {
-  padding: 2em;
+.sidebar a.active,
+.sidebar a:hover {
+  background-color: #374151;
+  color: #ffffff;
 }
 
-.read-the-docs {
-  color: #888;
+/* Content Wrapper */
+.content-wrapper {
+  flex: 1;
+  background-color: #f5f7fb;
+  padding: 1.5rem;
+  overflow-x: hidden;
+}
+
+/* Topbar */
+.topbar {
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* ======================================
+   KANBAN BOARD STYLES
+====================================== */
+
+.kanban-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.kanban-column {
+  min-width: 300px;
+}
+
+.kanban-card {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.kanban-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* ======================================
+   LOGIN PAGE STYLES
+====================================== */
+
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
+}
+
+.auth-card {
+  width: 400px;
+  border-radius: 12px;
+}
+
+/* ======================================
+   ACTIVITY TIMELINE
+====================================== */
+
+.activity-item {
+  border-left: 4px solid #0d6efd;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
 }
