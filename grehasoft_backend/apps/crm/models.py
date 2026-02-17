@@ -1,9 +1,10 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from utils.models import TrackingModel  # Abstract base with soft-delete & audit fields
+from utils.models import GrehasoftBaseModel
+  # Abstract base with soft-delete & audit fields
 
-class Client(TrackingModel):
+class Client(GrehasoftBaseModel):
     """
     Verified business entities. A Client is either created manually 
     or generated upon Lead conversion.
@@ -34,7 +35,7 @@ class Client(TrackingModel):
         return self.company_name
 
 
-class Lead(TrackingModel):
+class Lead(GrehasoftBaseModel):
     """
     Prospects captured by Sales Executives. 
     Isolated by department (Software/Marketing).
@@ -109,7 +110,7 @@ class Lead(TrackingModel):
         return f"{self.name} ({self.company_name or 'No Company'})"
 
 
-class LeadFollowUp(TrackingModel):
+class LeadFollowUp(GrehasoftBaseModel):
     """
     Detailed history of interactions with a specific lead.
     Essential for CRM accountability.
