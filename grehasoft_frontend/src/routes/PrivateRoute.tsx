@@ -1,14 +1,15 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { UserRole } from '../types/auth';
+import type{ UserRole } from '../types/auth';
 import { PATHS } from './paths';
-import Spinner from '../components/common/Spinner';
+import {Spinner} from '../components/common/Spinner';
 
 interface Props {
-  children: JSX.Element;
+  children: React.ReactNode;
   allowedRoles?: UserRole[];
 }
+
 
 const PrivateRoute: React.FC<Props> = ({ children, allowedRoles }) => {
   const { isAuthenticated, user, loading } = useAuth();

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { crmService } from '../../../api/crm.service';
 import { pmsService } from '../../../api/pms.service';
-import { Client } from '../../../types/crm';
-import { Project } from '../../../types/pms';
+import type{ Client } from '../../../types/crm';
+import type{ Project } from '../../../types/pms';
 import { dateHelper } from '../../../utils/dateHelper';
-import Spinner from '../../../components/common/Spinner';
+import {Spinner} from '../../../components/common/Spinner';
 import { DataTable } from '../../../components/common/DataTable';
 import { ProjectProgress } from '../../../components/pms/project/ProjectProgress';
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { SelectField } from '../forms/SelectField';

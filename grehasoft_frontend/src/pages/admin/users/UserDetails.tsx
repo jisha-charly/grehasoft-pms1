@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { authService } from '../../../api/auth.service';
 import { reportService } from '../../../api/report.service';
-import { User, UserRole } from '../../../types/auth';
-import { ActivityLog } from '../../../types/activity';
+import type{ User } from '../../../types/auth';
+import type { ActivityLog } from '../../../types/activity';
 import { dateHelper } from '../../../utils/dateHelper';
 import { ActivityTimeline } from '../../../components/activity/ActivityTimeline';
 import { Button } from '../../../components/common/Button';
-import Spinner from '../../../components/common/Spinner';
+import{ Spinner } from '../../../components/common/Spinner';
 
 const UserDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   
   const [userData, setUserData] = useState<User | null>(null);
   const [userLogs, setUserLogs] = useState<ActivityLog[]>([]);
@@ -89,7 +89,7 @@ const UserDetails: React.FC = () => {
               <div className="d-grid gap-2">
                 {userData.status === 'active' ? (
                   <Button 
-                    variant="outline-danger" 
+                    variant="danger" 
                     loading={updating} 
                     onClick={() => handleStatusChange('suspended')}
                   >

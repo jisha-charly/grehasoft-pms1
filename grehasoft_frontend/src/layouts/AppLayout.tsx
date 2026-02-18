@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import Spinner from '../components/common/Spinner';
+import { Spinner } from "../components/common/Spinner";
+
 
 interface Props {
   children: React.ReactNode;

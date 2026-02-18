@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Project } from '../../../types/pms';
+import type { Project } from '../../../types/pms';
 import { ProjectProgress } from './ProjectProgress';
 import { PATHS } from '../../../routes/paths';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { pmsService } from '../../../api/pms.service';
-import { TaskFile } from '../../../types/pms';
+import type { TaskFile } from '../../../types/pms';
 import { FileItem } from './FileItem';
 import { Spinner } from '../../common/Spinner';
 

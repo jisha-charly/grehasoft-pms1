@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { DndContext, closestCorners, DragEndEvent } from '@dnd-kit/core';
+import { DndContext, closestCorners } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
+
 import { pmsService } from '../../../api/pms.service';
-import { Task, TaskStatus, KANBAN_COLUMNS } from '../../../types/pms';
-import KanbanColumn from '../../../components/pms/kanban/KanbanColumn';
-import Spinner from '../../../components/common/Spinner';
+import type { Task, TaskStatus } from '../../../types/pms';
+import { KanbanColumn,KANBAN_COLUMNS} from '../../../components/pms/kanban/KanbanColumn';
+
+import {Spinner} from '../../../components/common/Spinner';
 
 const KanbanPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -60,13 +63,14 @@ const KanbanPage: React.FC = () => {
       <DndContext collisionDetection={closestCorners} onDragEnd={onDragEnd}>
         <div className="d-flex overflow-auto pb-3 gap-3" style={{ minHeight: '75vh' }}>
           {KANBAN_COLUMNS.map(col => (
-            <KanbanColumn 
-              key={col.id} 
-              id={col.id} 
-              title={col.title} 
-              tasks={tasks.filter(t => t.status === col.id)} 
-            />
-          ))}
+  <KanbanColumn
+    key={col.id}
+    id={col.id}
+    title={col.title}
+    tasks={tasks.filter(t => t.status === col.id)}
+  />
+))}
+
         </div>
       </DndContext>
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LeadFollowUp } from '../../types/crm';
+import type { LeadFollowUp } from '../../types/crm';
 import { dateHelper } from '../../utils/dateHelper';
 
 interface Props {

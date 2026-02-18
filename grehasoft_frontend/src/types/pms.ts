@@ -1,5 +1,4 @@
-import { Department, User } from './auth';
-import { Client } from './crm';
+
 
 export type ProjectStatus = 'not_started' | 'in_progress' | 'on_hold' | 'completed' | 'cancelled';
 export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done' | 'blocked';
@@ -88,3 +87,8 @@ export interface TaskComment {
   comment: string;
   created_at: string;
 }
+export const KANBAN_COLUMNS = [
+  { id: "todo", title: "To Do" },
+  { id: "in_progress", title: "In Progress" },
+  { id: "done", title: "Done" },
+];

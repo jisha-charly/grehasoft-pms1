@@ -3,9 +3,11 @@ import { Spinner } from './Spinner';
 
 export interface Column<T> {
   header: string;
-  render: (item: T) => React.ReactNode;
+  key?: keyof T; // ✅ for auto rendering
+  render?: (item: T) => React.ReactNode; // ✅ optional
   width?: string;
 }
+
 
 interface DataTableProps<T> {
   columns: Column<T>[];
@@ -44,7 +46,13 @@ export function DataTable<T>({ columns, data, loading, emptyMessage }: DataTable
             data.map((item, rowIdx) => (
               <tr key={rowIdx}>
                 {columns.map((col, colIdx) => (
-                  <td key={colIdx} className="py-3">{col.render(item)}</td>
+                  <td key={colIdx} className="py-3">
+  {col.render
+    ? col.render(item)
+    : col.key
+      ? (item[col.key] as React.ReactNode)
+      : null}
+</td>
                 ))}
               </tr>
             ))

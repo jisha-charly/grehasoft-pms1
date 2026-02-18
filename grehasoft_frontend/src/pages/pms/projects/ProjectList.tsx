@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { pmsService } from '../../../api/pms.service';
-import { Project } from '../../../types/pms';
+import type { Project } from '../../../types/pms';
 import { DataTable } from '../../../components/common/DataTable';
 import { ProjectProgress } from '../../../components/pms/project/ProjectProgress';
 import { dateHelper } from '../../../utils/dateHelper';

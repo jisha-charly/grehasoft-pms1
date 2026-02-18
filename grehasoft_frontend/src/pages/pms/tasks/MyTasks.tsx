@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { pmsService } from '../../../api/pms.service';
-import { Task } from '../../../types/pms';
+import type { Task } from '../../../types/pms';
 import { DataTable } from '../../../components/common/DataTable';
-import { dateHelper } from '../../../utils/dateHelper';
+//import { dateHelper } from '../../../utils/dateHelper';
+import type { Column } from '../../../components/common/DataTable';
 
 const MyTasks: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -16,20 +17,24 @@ const MyTasks: React.FC = () => {
     });
   }, []);
 
-  const columns = [
-    { header: 'Task Name', key: 'title', render: (t: Task) => <span className="fw-bold">{t.title}</span> },
-    { header: 'Project', key: 'project_name' },
-    { 
-      header: 'Priority', 
-      render: (t: Task) => (
-        <span className={`badge ${t.priority === 'critical' ? 'bg-danger' : 'bg-info text-dark'}`}>
-          {t.priority.toUpperCase()}
-        </span>
-      ) 
-    },
-    { header: 'Status', render: (t: Task) => <span className="text-capitalize small fw-bold">{t.status}</span> },
-    { header: 'Due Date', render: (t: Task) => dateHelper.formatDisplay(t.due_date) }
-  ];
+  const columns: Column<Task>[] = [
+  {
+    header: 'Title',
+    key: 'title',
+    render: (t) => <span className="fw-semibold">{t.title}</span>,
+  },
+  {
+    header: 'Status',
+    key: 'status',
+    render: (t) => <span className="badge bg-info">{t.status}</span>,
+  },
+  {
+    header: 'Due Date',
+    key: 'due_date',
+    render: (t) => <span>{t.due_date}</span>,
+  },
+];
+
 
   return (
     <div className="container-fluid">

@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { reportService, DashboardStats } from '../../api/report.service';
+import { reportService } from '../../api/report.service';
+import type { DashboardStats } from '../../api/report.service';
+import { TaskDistributionChart } from '../../components/dashboard/chart/TaskDistributionChart';
+
 import { KpiCard } from '../../components/dashboard/KpiCard';
-import { TaskDistributionChart } from '../../components/dashboard/Charts/TaskDistributionChart';
-import Spinner from '../../components/common/Spinner';
+//import { LeadStatusChart } from '../../components/dashboard/chart/LeadStatusChart';
+//import { ProjectTrendChart } from '../../components/dashboard/chart/ProjectTrendChart';
+import {Spinner} from '../../components/common/Spinner';
 
 const SoftwareDashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);

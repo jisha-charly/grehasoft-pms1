@@ -1,5 +1,5 @@
 import React from 'react';
-import { TaskFile } from '../../../types/pms';
+import type { TaskFile } from '../../../types/pms';
 import { dateHelper } from '../../../utils/dateHelper';
 
 export const FileItem: React.FC<{ file: TaskFile }> = ({ file }) => {

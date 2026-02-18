@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { reportService } from '../../../api/report.service';
-import { ActivityLog } from '../../../types/activity';
+import type { ActivityLog } from '../../../types/activity';
 import { ActivityTimeline } from '../../../components/activity/ActivityTimeline';
-import Spinner from '../../../components/common/Spinner';
+
+import { Button } from '../../../components/common/Button';
+
+import { Spinner } from '../../../components/common/Spinner';
+
 
 const ActivityLogs: React.FC = () => {
   const [logs, setLogs] = useState<ActivityLog[]>([]);

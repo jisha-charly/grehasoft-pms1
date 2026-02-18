@@ -23,7 +23,8 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      await login(email, password);
+     await login({ email, password });
+
       navigate(from, { replace: true });
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid email or password. Please try again.');

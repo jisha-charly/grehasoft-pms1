@@ -1,6 +1,6 @@
 import React from 'react';
-import { ActivityLog } from '../../../types/activity';
-import { dateHelper } from '../../../utils/dateHelper';
+import type { ActivityLog } from '../../types/activity';
+import { dateHelper } from '../../utils/dateHelper';
 
 export const ActivityItem: React.FC<{ log: ActivityLog }> = ({ log }) => (
   <div className="position-relative mb-4">

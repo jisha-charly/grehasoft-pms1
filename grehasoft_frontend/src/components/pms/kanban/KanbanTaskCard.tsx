@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Task } from '../../../types/pms';
+import type { Task } from '../../../types/pms';
 import { TaskPriority } from '../task/TaskPriority';
 
 export const KanbanTaskCard: React.FC<{ task: Task }> = ({ task }) => {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { crmService } from '../../../api/crm.service';
-import { Lead, LeadFollowUp } from '../../../types/crm';
+import type { Lead, LeadFollowUp } from '../../../types/crm';
 import { ActivityTimeline } from '../../../components/activity/ActivityTimeline';
-import Spinner from '../../../components/common/Spinner';
+import {Spinner} from '../../../components/common/Spinner';
 
 const LeadDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();

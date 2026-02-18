@@ -1,5 +1,5 @@
 import React from 'react';
-import { TaskPriority as PriorityType } from '../../../types/pms';
+import type { TaskPriority as PriorityType } from '../../../types/pms';
 
 export const TaskPriority: React.FC<{ priority: PriorityType }> = ({ priority }) => {
   const config: Record<PriorityType, { color: string; icon: string }> = {

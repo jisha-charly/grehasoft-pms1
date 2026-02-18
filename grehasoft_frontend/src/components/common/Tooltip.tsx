@@ -1,16 +1,14 @@
-import React from 'react';
+import React from "react";
 
-interface Props {
+interface TooltipProps {
   text: string;
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
 }
 
-export const Tooltip: React.FC<Props> = ({ text, children }) => {
-  // Simple implementation using native title. 
-  // For advanced Bootstrap Tooltips, initialization via bootstrap.js would be required.
-  return React.cloneElement(children, {
+export const Tooltip: React.FC<TooltipProps> = ({ text, children }) => {
+  return React.cloneElement(children as React.ReactElement<any>, {
     title: text,
-    'data-bs-toggle': 'tooltip',
-    'data-bs-placement': 'top',
+    "data-bs-toggle": "tooltip",
+    "data-bs-placement": "top",
   });
 };

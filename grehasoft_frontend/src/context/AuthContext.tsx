@@ -1,8 +1,10 @@
-import React, { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from "react";
+import type { ReactNode } from "react";
+
 import { jwtDecode } from 'jwt-decode';
 import { authService } from '../api/auth.service';
 import { storage } from '../utils/storage';
-import { User, LoginCredentials, JWTPayload, UserRole } from '../types/auth';
+import type{ User, LoginCredentials, JWTPayload, UserRole } from '../types/auth';
 
 /**
  * AuthContext Interface
@@ -129,4 +131,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+import { useContext } from "react";
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

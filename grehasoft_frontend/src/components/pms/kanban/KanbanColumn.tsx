@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Task } from '../../../types/pms';
+import type { Task } from '../../../types/pms';
 import { KanbanTaskCard } from './KanbanTaskCard';
 
 interface Props {
@@ -9,6 +9,12 @@ interface Props {
   title: string;
   tasks: Task[];
 }
+export const KANBAN_COLUMNS = [
+  { id: 'todo', title: 'To Do' },
+  { id: 'in_progress', title: 'In Progress' },
+  { id: 'review', title: 'Review' },
+  { id: 'done', title: 'Done' },
+];
 
 export const KanbanColumn: React.FC<Props> = ({ id, title, tasks }) => {
   const { setNodeRef } = useDroppable({ id });

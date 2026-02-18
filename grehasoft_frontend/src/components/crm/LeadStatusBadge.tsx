@@ -1,5 +1,5 @@
 import React from 'react';
-import { LeadStatus } from '../../types/crm';
+import type { LeadStatus } from '../../types/crm';
 
 export const LeadStatusBadge: React.FC<{ status: LeadStatus }> = ({ status }) => {
   const config: Record<LeadStatus, { color: string; label: string }> = {

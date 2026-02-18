@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Client } from '../../types/crm';
+import type { Client } from '../../types/crm';
 import { PATHS } from '../../routes/paths';
 
 interface Props {

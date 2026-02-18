@@ -1,5 +1,5 @@
 import React from 'react';
-import { TaskComment } from '../../../types/pms';
+import type{ TaskComment } from '../../../types/pms';
 import { dateHelper } from '../../../utils/dateHelper';
 
 export const CommentItem: React.FC<{ comment: TaskComment; isOwn: boolean }> = ({ comment, isOwn }) => (

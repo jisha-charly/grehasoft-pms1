@@ -1,4 +1,5 @@
-import { Department, User } from './auth';
+
+
 
 export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'converted' | 'lost';
 export type LeadSource = 'website' | 'linkedin' | 'referral' | 'cold_call' | 'other';

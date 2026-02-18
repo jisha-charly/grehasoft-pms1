@@ -1,5 +1,5 @@
 import { useAuth } from './useAuth';
-import { UserRole } from '../types/auth';
+import type{ UserRole } from '../types/auth';
 
 /**
  * Custom hook to handle Role-Based Access Control (RBAC) logic in the UI.

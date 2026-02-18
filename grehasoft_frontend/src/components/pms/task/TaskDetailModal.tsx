@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from '../../common/Modal';
-import { Task } from '../../../types/pms';
+import type{ Task } from '../../../types/pms';
 import { CommentSection } from '../comments/CommentSection';
 import { FileVersionList } from '../files/FileVersionList';
 

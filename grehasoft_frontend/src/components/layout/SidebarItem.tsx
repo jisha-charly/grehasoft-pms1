@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { UserRole } from '../../types/auth';
+import type { UserRole } from '../../types/auth';
 
 interface Props {
   to: string;

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { pmsService } from '../../../api/pms.service';
-import { Project } from '../../../types/pms';
-import Spinner from '../../../components/common/Spinner';
+import type { Project } from '../../../types/pms';
+import {Spinner} from '../../../components/common/Spinner';
 import { MilestoneList } from '../../../components/pms/project/MilestoneList';
 
 const ProjectDetails: React.FC = () => {

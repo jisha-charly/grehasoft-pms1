@@ -1,15 +1,18 @@
 import React from 'react';
-import { 
-  DndContext, 
-  closestCorners, 
-  KeyboardSensor, 
-  PointerSensor, 
-  useSensor, 
-  useSensors, 
-  DragEndEvent 
-} from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Task, KANBAN_COLUMNS } from '../../../types/pms';
+import {
+  DndContext,
+  closestCorners,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+
+import type { DragEndEvent } from "@dnd-kit/core";
+
+
+import type { Task } from '../../../types/pms';
+import { KANBAN_COLUMNS } from "../../../types/pms";
 import { KanbanColumn } from './KanbanColumn';
 
 interface Props {

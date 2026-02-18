@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { PATHS } from '../routes/paths';
+//import { PATHS } from '../routes/paths';
 
 const AuthLayout: React.FC = () => {
   const { isAuthenticated } = useAuth();

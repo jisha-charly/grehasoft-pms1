@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../../api/axiosInstance';
-import { TaskComment } from '../../../types/pms';
+import type { TaskComment } from '../../../types/pms';
 import { CommentItem } from './CommentItem';
 import { useAuth } from '../../../context/AuthContext';
 import { Button } from '../../common/Button';

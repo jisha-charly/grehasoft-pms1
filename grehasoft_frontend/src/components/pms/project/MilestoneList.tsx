@@ -1,5 +1,5 @@
 import React from 'react';
-import { Milestone } from '../../../types/pms';
+import type { Milestone } from '../../../types/pms';
 import { dateHelper } from '../../../utils/dateHelper';
 
 export const MilestoneList: React.FC<{ milestones: Milestone[] }> = ({ milestones }) => (

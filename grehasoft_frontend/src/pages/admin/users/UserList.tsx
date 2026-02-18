@@ -1,15 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from "react-router-dom";
 import { authService } from '../../../api/auth.service';
-import { User, UserRole, Department } from '../../../types/auth';
+import type{ User } from '../../../types/auth';
 import { DataTable } from '../../../components/common/DataTable';
 import { Button } from '../../../components/common/Button';
 import { dateHelper } from '../../../utils/dateHelper';
-import Spinner from '../../../components/common/Spinner';
+//import {Spinner} from '../../../components/common/Spinner';
+
+
 
 const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const navigate = useNavigate();
+ // const [search, setSearch] = useState('');
+const handleSuspend = (userId: number) => {
+  console.log("Suspend user:", userId);
+};
+
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
@@ -68,12 +76,24 @@ const UserList: React.FC = () => {
     },
     { 
       header: 'Actions', 
-      render: (u: User) => (
-        <div className="btn-group btn-group-sm">
-          <Button variant="outline-primary"><i className="bi bi-pencil"></i></Button>
-          <Button variant="outline-danger"><i className="bi bi-slash-circle"></i></Button>
-        </div>
-      ) 
+     render: (u: User) => (
+  <div className="btn-group btn-group-sm">
+    <Button
+      variant="outline-primary"
+      onClick={() => navigate(`/admin/users/${u.id}`)}
+    >
+      <i className="bi bi-pencil"></i>
+    </Button>
+
+    <Button
+      variant="danger"
+      onClick={() => handleSuspend(u.id)}
+    >
+      <i className="bi bi-slash-circle"></i>
+    </Button>
+  </div>
+)
+
     },
   ];
 

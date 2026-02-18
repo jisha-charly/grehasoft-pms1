@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Lead } from '../../types/crm';
+import type { Lead } from '../../types/crm';
 import { LeadStatusBadge } from './LeadStatusBadge';
 import { Spinner } from '../common/Spinner';
 import { PATHS } from '../../routes/paths';
